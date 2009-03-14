@@ -11,19 +11,19 @@ Create a ~/.twitter.yml file. This file contains your Twitter credentials. For e
 
 *Optionally*, create a ~/.twitter_ineligible.yml. This file contains a list of followers who are not eligible to win the contest, such as employees of your company:
 
-    cpytel
-    jyurek
-    jankowski
-    tsaleh
-    croaky
-    cssboy
-    kevinburg
-    joeferris
-    mikeburns
-    jayunit
-    qrush
-    umbrellatoday
-    widgetfinger
+<code>cpytel
+jyurek
+jankowski
+tsaleh
+croaky
+cssboy
+kevinburg
+joeferris
+mikeburns
+jayunit
+qrush
+umbrellatoday
+widgetfinger</code>
 
 Run the program:
 

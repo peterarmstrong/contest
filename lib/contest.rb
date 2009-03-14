@@ -20,7 +20,7 @@ class User
     page_count.times do |page|
       @followers += followers_for_page(page)
     end
-    @followers
+    @followers.compact
   end
 
   def followers_for_page(page)

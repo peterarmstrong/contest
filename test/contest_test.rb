@@ -1,9 +1,10 @@
 require 'test/unit'
+require 'rubygems'
 require 'shoulda'
 require 'quietbacktrace'
 require 'redgreen'
 
-require File.join(File.dirname(__FILE__), "..", "lib", "twitter_follower_contest")
+require File.join(File.dirname(__FILE__), "..", "lib", "contest")
 
 class UserTest < Test::Unit::TestCase
   context "a User with valid credentials" do
