@@ -20,6 +20,8 @@ Create a ~/.twitter.yml file. This file contains your Twitter credentials. For e
     kevinburg
     joeferris
     mikeburns
+    jayunit
+    qrush
     umbrellatoday
     widgetfinger
 
