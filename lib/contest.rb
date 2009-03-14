@@ -15,12 +15,21 @@ class User
   end
 
   def find_followers
-    page_count = (followers_count.to_f / PER_PAGE.to_f).ceil
     @followers ||= []
     page_count.times do |page|
-      @followers += followers_for_page(page)
+      @followers += followers_for_page(page+1)
     end
-    @followers.compact
+    @followers.uniq!
+    @followers.compact!
+    @followers
+  end
+
+  def random_follower
+    followers[rand(followers.size)]
+  end
+
+  def page_count
+    page_count = (followers_count.to_f / PER_PAGE.to_f).ceil
   end
 
   def followers_for_page(page)
@@ -30,10 +39,6 @@ class User
     Nokogiri::XML(resource.get).xpath("//screen_name").collect do |each| 
       each.inner_html.to_s.strip
     end
-  end
-
-  def random_follower
-    followers[rand(followers.size)]
   end
 
   def followers_count
@@ -52,7 +57,7 @@ puts "looking for credentials file..."
 credentials_path = File.join(ENV['HOME'], ".twitter.yml")
 credentials      = YAML::load_file(credentials_path)
 
-puts "authenticating, caching followers... (this may take a moment if this account has a lot of followers)"
+puts "authenticating, caching followers... (this may take a moment)"
 
 user = User.new(:name     => credentials['name'], 
                 :password => credentials['password'])
