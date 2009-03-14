@@ -47,10 +47,17 @@ class User
 
 end
 
+puts "looking for credentials file..."
+
 credentials_path = File.join(ENV['HOME'], ".twitter.yml")
 credentials      = YAML::load_file(credentials_path)
+
+puts "authenticating, caching followers... (this may take a moment if this account has a lot of followers)"
+
 user = User.new(:name     => credentials['name'], 
                 :password => credentials['password'])
+
+puts "and the winner of the contest is..."
 
 puts user.random_follower
 
