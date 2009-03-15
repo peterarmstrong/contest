@@ -3,66 +3,67 @@ require 'rest_client'
 require 'nokogiri'
 require 'open-uri'
 
-PER_PAGE = 100
+module Resource
+  def self.get(path, node, user)
+    resource  = RestClient::Resource.new(path, 
+                                         user.name, 
+                                         user.password)
+
+    Nokogiri::XML(resource.get).xpath(node).collect do |each| 
+      each.inner_html.to_s.strip
+    end
+  end
+end
 
 class User
-  attr_accessor :name, :password, :followers
 
-  def initialize(opts = {})
-    @name      = opts[:name]
-    @password  = opts[:password]
-    find_followers
-  end
+  attr_accessor :name, :password, :followers, :followers_count
 
-  def find_followers
-    @followers ||= []
-    page_count.times do |page|
-      @followers += followers_for_page(page+1)
-    end
-    @followers.uniq!
-    @followers.compact!
-    @followers
+  def initialize
+    get_credentials
+    get_followers_count
+    get_followers
   end
 
   def random_follower
-    followers[rand(followers.size)]
+    followers[rand(followers_count)]
+  end
+
+  protected
+
+  def get_credentials
+    credentials_path = File.join(ENV['HOME'], ".twitter.yml")
+    credentials      = YAML::load_file(credentials_path)
+
+    @name            = credentials['name']
+    @password        = credentials['password']
+  end
+
+  def get_followers_count
+    path = "http://twitter.com/users/show/#{name}.xml"
+    node = "//followers_count"
+    @followers_count = Resource.get(path, node, self).first.to_i
+  end
+
+  def get_followers
+    @followers = []
+    page_count.times do |page|
+      @followers += followers_for_page(page+1)
+    end
+    @followers.compact!
   end
 
   def page_count
-    page_count = (followers_count.to_f / PER_PAGE.to_f).ceil
+    followers_per_page = 100
+    page_count = (followers_count.to_f / 
+                  followers_per_page.to_f).ceil
   end
 
   def followers_for_page(page)
-    followers_path = "http://twitter.com/statuses/followers.xml?page=#{page}"
-    resource       = RestClient::Resource.new(followers_path, name, password)
-
-    Nokogiri::XML(resource.get).xpath("//screen_name").collect do |each| 
-      each.inner_html.to_s.strip
-    end
-  end
-
-  def followers_count
-    user_path = "http://twitter.com/users/show/#{name}.xml"
-    resource  = RestClient::Resource.new(user_path, name, password)
-
-    Nokogiri::XML(resource.get).xpath("//followers_count").collect do |each| 
-      each.inner_html.to_s.strip
-    end.first.to_i
+    path = "http://twitter.com/statuses/followers.xml?page=#{page}"
+    node = "//screen_name"
+    Resource.get(path, node, self)
   end
 
 end
-
-puts "looking for credentials file..."
-
-credentials_path = File.join(ENV['HOME'], ".twitter.yml")
-credentials      = YAML::load_file(credentials_path)
-
-puts "authenticating, caching followers... (this may take a moment)"
-
-user = User.new(:name     => credentials['name'], 
-                :password => credentials['password'])
-
-puts "and the winner of the contest is..."
-
-puts user.random_follower
 
