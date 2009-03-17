@@ -1,10 +1,13 @@
 require 'test/unit'
 require 'rubygems'
 require 'redgreen'
+require 'rr'
 
 require File.join(File.dirname(__FILE__), "..", "lib", "contest")
 
 class UserTest < Test::Unit::TestCase
+
+  include RR::Adapters::TestUnit
 
   def test_correct_followers_count
     user = User.new

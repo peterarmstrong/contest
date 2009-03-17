@@ -17,18 +17,18 @@ h2. Optional
 
 Create a ~/.twitter/ineligible.yml file. It contains a list of followers who are not eligible to win the contest, such as employees of your company. For example:
 
-<code>ineligible:
- - cpytel
- - jyurek
- - jankowski
- - tsaleh
- - croaky
- - joeferris
- - mikeburns
- - cssboy
- - kevinburg
- - jayunit
- - qrush
- - umbrellatoday
- - widgetfinger</code>
+    ineligible:
+     - cpytel
+     - jyurek
+     - jankowski
+     - tsaleh
+     - croaky
+     - joeferris
+     - mikeburns
+     - cssboy
+     - kevinburg
+     - jayunit
+     - qrush
+     - umbrellatoday
+     - widgetfinger
 
