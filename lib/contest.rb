@@ -3,13 +3,16 @@ require 'rest_client'
 require 'nokogiri'
 require 'open-uri'
 
+CREDENTIALS_PATH = File.join(ENV['HOME'], ".twitter", "credentials.yml")
+INELIGIBLE_PATH  = File.join(ENV['HOME'], ".twitter", "ineligible.yml")
+
 module Resource
   def self.get(path, node, user)
     resource  = RestClient::Resource.new(path, 
                                          user.name, 
                                          user.password)
 
-    Nokogiri::XML(resource.get).xpath(node).collect do |each| 
+    Nokogiri::XML(resource.get).xpath("//#{node}").collect do |each| 
       each.inner_html.to_s.strip
     end
   end
@@ -17,32 +20,38 @@ end
 
 class User
 
-  attr_accessor :name, :password, :followers, :followers_count
+  attr_accessor :name, :password, :followers, :followers_count, :ineligibles
 
   def initialize
     get_credentials
+    get_ineligibles
     get_followers_count
     get_followers
   end
 
   def random_follower
-    followers[rand(followers_count)]
+    winner = followers[rand(followers_count)]
+    return winner unless ineligibles.include?(winner)
+    random_follower
   end
 
   protected
 
   def get_credentials
-    credentials_path = File.join(ENV['HOME'], ".twitter.yml")
-    credentials      = YAML::load_file(credentials_path)
+    credentials = YAML::load_file(CREDENTIALS_PATH)
 
-    @name            = credentials['name']
-    @password        = credentials['password']
+    @name       = credentials['name']
+    @password   = credentials['password']
+  end
+
+  def get_ineligibles
+    @ineligibles = YAML::load_file(INELIGIBLE_PATH)['ineligible']
   end
 
   def get_followers_count
-    path = "http://twitter.com/users/show/#{name}.xml"
-    node = "//followers_count"
-    @followers_count = Resource.get(path, node, self).first.to_i
+    path     = "http://twitter.com/users/show/#{name}.xml"
+    property = "followers_count"
+    @followers_count = Resource.get(path, property, self).first.to_i
   end
 
   def get_followers
@@ -60,9 +69,9 @@ class User
   end
 
   def followers_for_page(page)
-    path = "http://twitter.com/statuses/followers.xml?page=#{page}"
-    node = "//screen_name"
-    Resource.get(path, node, self)
+    path     = "http://twitter.com/statuses/followers.xml?page=#{page}"
+    property = "screen_name"
+    Resource.get(path, property, self)
   end
 
 end

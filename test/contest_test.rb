@@ -11,10 +11,16 @@ class UserTest < Test::Unit::TestCase
     assert_equal user.followers_count, user.followers.size
   end
 
-  def test_random_follower
+  def test_random_follower_is_a_follower
     user = User.new
     assert user.followers.any?
     assert user.followers.include?(user.random_follower)
+  end
+
+  def test_random_follower_is_eligible
+    user = User.new
+    assert user.followers.any?
+    assert !user.ineligibles.include?(user.random_follower)
   end
 
 end
