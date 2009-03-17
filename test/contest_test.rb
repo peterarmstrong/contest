@@ -26,5 +26,10 @@ class UserTest < Test::Unit::TestCase
     assert !user.ineligibles.include?(user.random_follower)
   end
 
+  def test_no_error_raised_when_ineligible_file_does_not_exist
+    stub(Settings).ineligibles { raise Errno::ENOENT }
+    assert_nothing_raised { User.new }
+  end
+
 end
 

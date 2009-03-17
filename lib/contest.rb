@@ -3,9 +3,6 @@ require 'rest_client'
 require 'nokogiri'
 require 'open-uri'
 
-CREDENTIALS_PATH = File.join(ENV['HOME'], ".twitter", "credentials.yml")
-INELIGIBLE_PATH  = File.join(ENV['HOME'], ".twitter", "ineligible.yml")
-
 module Resource
   def self.get(path, node, user)
     resource  = RestClient::Resource.new(path, 
@@ -18,8 +15,21 @@ module Resource
   end
 end
 
-class User
+module Settings
+  TWITTER_PATH = File.join(ENV['HOME'], ".twitter")
 
+  def self.credentials
+    path = File.join(TWITTER_PATH, "credentials.yml")
+    YAML::load_file(path)
+  end
+
+  def self.ineligibles
+    path = File.join(TWITTER_PATH, "ineligible.yml")
+    YAML::load_file(path)['ineligible']
+  end
+end
+
+class User
   attr_accessor :name, :password, :followers, :followers_count, :ineligibles
 
   def initialize
@@ -38,14 +48,17 @@ class User
   protected
 
   def get_credentials
-    credentials = YAML::load_file(CREDENTIALS_PATH)
-
+    credentials = Settings.credentials
     @name       = credentials['name']
     @password   = credentials['password']
   end
 
   def get_ineligibles
-    @ineligibles = YAML::load_file(INELIGIBLE_PATH)['ineligible']
+    begin
+      @ineligibles = Settings.ineligibles
+    rescue
+      @ineligibles = []
+    end
   end
 
   def get_followers_count
@@ -73,6 +86,5 @@ class User
     property = "screen_name"
     Resource.get(path, property, self)
   end
-
 end
 
