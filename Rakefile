@@ -12,6 +12,7 @@ end
 task :default => [:contest]
 
 task :contest do
+  RestClient.log = 'stdout'
   puts "authenticating, caching followers... (this may take a moment)"
   user = User.new
 

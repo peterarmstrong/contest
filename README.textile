@@ -14,6 +14,10 @@ Two excellent gems:
 
 h2. Instructions
 
+Clone the repo:
+
+    git clone git://github.com/thoughtbot/contest.git
+
 Create a ~/.twitter/credentials.yml file. This file contains your Twitter credentials. For example:
 
     name: thoughtbot
@@ -22,6 +26,11 @@ Create a ~/.twitter/credentials.yml file. This file contains your Twitter creden
 Run the program:
 
     rake contest
+
+The output will be:
+
+    authenticating, caching followers... (this may take a moment)
+    and the winner is... grossberg
 
 h2. Optional
 
