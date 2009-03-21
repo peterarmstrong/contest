@@ -16,15 +16,13 @@ module Resource
 end
 
 module Settings
-  TWITTER_PATH = File.join(ENV['HOME'], ".twitter")
-
   def self.credentials
-    path = File.join(TWITTER_PATH, "credentials.yml")
+    path = File.join(File.join(ENV['HOME'], ".twitter"), "credentials.yml")
     YAML::load_file(path)
   end
 
   def self.ineligibles
-    path = File.join(TWITTER_PATH, "ineligible.yml")
+    path = File.join(File.join(ENV['HOME'], ".twitter"), "ineligible.yml")
     YAML::load_file(path)['ineligible']
   end
 end

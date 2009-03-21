@@ -2,6 +2,14 @@ h1. Contest
 
 Run a contest to select a random person who follows you on Twitter.
 
+h2. Prerequisites
+
+* "REST Client":http://github.com/adamwiggins/rest-client
+* "Nokogiri":http://github.com/tenderlove/nokogiri
+
+    sudo gem install adamwiggins-rest-client
+    sudo gem install nokogiri
+
 h2. Instructions
 
 Create a ~/.twitter/credentials.yml file. This file contains your Twitter credentials. For example:
