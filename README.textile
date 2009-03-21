@@ -4,11 +4,13 @@ Run a contest to select a random person who follows you on Twitter.
 
 h2. Prerequisites
 
-* "REST Client":http://github.com/adamwiggins/rest-client
-* "Nokogiri":http://github.com/tenderlove/nokogiri
+Two excellent gems:
 
     sudo gem install adamwiggins-rest-client
     sudo gem install nokogiri
+
+* "REST Client":http://github.com/adamwiggins/rest-client
+* "Nokogiri":http://github.com/tenderlove/nokogiri
 
 h2. Instructions
 
